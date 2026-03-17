@@ -1,7 +1,11 @@
 package io.github.rubensrabelo.project.mscommand.entities;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,8 +21,8 @@ public class CustomerEntity {
     @Column(nullable = false, length = 100)
     private String phone;
 
-    // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<AppointmentsEntity> appointments;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppointmentsEntity> appointments;
 
     public CustomerEntity() {
     }
@@ -27,6 +31,7 @@ public class CustomerEntity {
         this.name =  builder.name;
         this.email = builder.email;
         this.phone = builder.phone;
+        this.appointments = builder.appointments;
     }
 
     public String getName() {
@@ -58,7 +63,7 @@ public class CustomerEntity {
         private String name;
         private String email;
         private String phone;
-        // private List<AppointmentsEntity> appointments
+        private List<AppointmentsEntity> appointments;
 
         public Builder name(String name) {
             this.name = name;
@@ -75,10 +80,10 @@ public class CustomerEntity {
             return this;
         }
 
-        // public Builder appointments(List<AppointmentsEntity> appointments) {
-           // this.appointments = appointments;
-           // return this;
-        // }
+        public Builder appointments(List<AppointmentsEntity> appointments) {
+           this.appointments = appointments;
+           return this;
+        }
 
         public CustomerEntity build() {
             return new CustomerEntity(this);
