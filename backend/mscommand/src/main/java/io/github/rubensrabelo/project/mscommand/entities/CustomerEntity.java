@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customers")
-public class CustomerEntity {
+public class CustomerEntity extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String name;
