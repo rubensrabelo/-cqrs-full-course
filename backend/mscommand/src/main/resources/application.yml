@@ -1,0 +1,41 @@
+server:
+  servlet:
+    context-path: /ms-beautique
+  port: ${APP_PORT:8082}
+
+spring:
+  application:
+    name: beautique
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:3334/beautique}
+    username: ${SPRING_DATASOURCE_USERNAME:beautique}
+    password: ${SPRING_DATASOURCE_PASSWORD:beautique}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        "[default_schema]": beautique_schema
+        "[format_sql]": true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: beautique_schema
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:user}
+    password: ${SPRING_RABBITMQ_PASSWORD:password}
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","service":"${spring.application.name}","message":"%m"}%n'
