@@ -14,37 +14,42 @@ import jakarta.persistence.Table;
 public class AppointmentsEntity extends BaseEntity {
     
     @Column(nullable = false)
-    private LocalDateTime datetime;
+    private LocalDateTime dateTime;
 
     @Column(nullable = false)
-    private LocalDateTime appointmentsOpen;
+    private Boolean appointmentsOpen;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = true)
     private CustomerEntity customer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "beauty_procedure_id", nullable = true)
+    private BeautyProceduresEntity beautyProcedure;
+
     public AppointmentsEntity() {
     }
 
     private AppointmentsEntity(Builder builder) {
-        this.datetime = builder.datetime;
+        this.dateTime = builder.datetime;
         this.appointmentsOpen = builder.appointmentsOpen;
         this.customer = builder.customer;
+        this.beautyProcedure = builder.beautyProcedure;
     }
 
-    public LocalDateTime getDatetime() {
-        return datetime;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDatetime(LocalDateTime datetime) {
-        this.datetime = datetime;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public LocalDateTime getAppointmentsOpen() {
+    public Boolean getAppointmentsOpen() {
         return appointmentsOpen;
     }
 
-    public void setAppointmentsOpen(LocalDateTime appointmentsOpen) {
+    public void setAppointmentsOpen(Boolean appointmentsOpen) {
         this.appointmentsOpen = appointmentsOpen;
     }
 
@@ -55,24 +60,38 @@ public class AppointmentsEntity extends BaseEntity {
     public void setCustomer(CustomerEntity customer) {
         this.customer = customer;
     }
+    
+    public BeautyProceduresEntity getBeautyProcedure() {
+        return beautyProcedure;
+    }
+
+    public void setBeautyProcedure(BeautyProceduresEntity beautyProcedure) {
+        this.beautyProcedure = beautyProcedure;
+    }
 
     public static class Builder {
         private LocalDateTime datetime;
-        private LocalDateTime appointmentsOpen;
+        private Boolean appointmentsOpen;
         private CustomerEntity customer;
+        private BeautyProceduresEntity beautyProcedure;
 
         public Builder datetime(LocalDateTime datetime) {
             this.datetime = datetime;
             return this;
         }
 
-        public Builder appointmentsOpen(LocalDateTime appointmentsOpen) {
+        public Builder appointmentsOpen(Boolean appointmentsOpen) {
             this.appointmentsOpen = appointmentsOpen;
             return this;
         }
 
         public Builder customer(CustomerEntity customer) {
             this.customer = customer;
+            return this;
+        }
+
+        public Builder beautyProcedure(BeautyProceduresEntity beautyProcedure) {
+            this.beautyProcedure = beautyProcedure;
             return this;
         }
 

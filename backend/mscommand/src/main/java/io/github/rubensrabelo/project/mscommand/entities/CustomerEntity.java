@@ -58,6 +58,14 @@ public class CustomerEntity extends BaseEntity {
         this.phone = phone;
     }
 
+    public List<AppointmentsEntity> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentsEntity> appointments) {
+        this.appointments = appointments;
+    }
+
     public static class Builder {
 
         private String name;

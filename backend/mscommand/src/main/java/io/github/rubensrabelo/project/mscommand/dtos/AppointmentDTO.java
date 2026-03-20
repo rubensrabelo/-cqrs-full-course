@@ -2,12 +2,80 @@ package io.github.rubensrabelo.project.mscommand.dtos;
 
 import java.time.LocalDateTime;
 
-public record AppointmentDTO(
-    Long id,
-    LocalDateTime dateTime,
-    Boolean appointmentsOpen,
+public class AppointmentDTO {
 
-    Long customer,
-    Long beautyProcedure
-) {
+    private Long id;
+    private LocalDateTime dateTime;
+    private Boolean appointmentsOpen;
+    private Long customer;
+    private Long beautyProcedure;
+
+    private AppointmentDTO(Builder builder) {
+        this.id = builder.id;
+        this.dateTime = builder.dateTime;
+        this.appointmentsOpen = builder.appointmentsOpen;
+        this.customer = builder.customer;
+        this.beautyProcedure = builder.beautyProcedure;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public Boolean getAppointmentsOpen() {
+        return appointmentsOpen;
+    }
+
+    public Long getCustomer() {
+        return customer;
+    }
+
+    public Long getBeautyProcedure() {
+        return beautyProcedure;
+    }
+
+    public static class Builder {
+        private Long id;
+        private LocalDateTime dateTime;
+        private Boolean appointmentsOpen;
+        private Long customer;
+        private Long beautyProcedure;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder dateTime(LocalDateTime dateTime) {
+            this.dateTime = dateTime;
+            return this;
+        }
+
+        public Builder appointmentsOpen(Boolean appointmentsOpen) {
+            this.appointmentsOpen = appointmentsOpen;
+            return this;
+        }
+
+        public Builder customer(Long customer) {
+            this.customer = customer;
+            return this;
+        }
+
+        public Builder beautyProcedure(Long beautyProcedure) {
+            this.beautyProcedure = beautyProcedure;
+            return this;
+        }
+
+        public AppointmentDTO build() {
+            return new AppointmentDTO(this);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
 }

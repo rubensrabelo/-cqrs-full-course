@@ -4,8 +4,8 @@ import io.github.rubensrabelo.project.mscommand.dtos.AppointmentDTO;
 
 public interface AppointmentsService {
 
-    AppointmentDTO create(AppointmentDTO appointmentDTO);
-    AppointmentDTO update(AppointmentDTO appointmentDTO);
-    AppointmentDTO setCustomerToAppointment(AppointmentDTO appointmentDTO);
+    AppointmentDTO create(AppointmentDTO dto);
+    AppointmentDTO update(AppointmentDTO dto);
+    AppointmentDTO setCustomerToAppointment(AppointmentDTO dto);
     void delete(Long id);
 }
