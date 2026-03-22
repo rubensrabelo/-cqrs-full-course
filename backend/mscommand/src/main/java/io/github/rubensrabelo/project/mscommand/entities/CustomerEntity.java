@@ -9,7 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "customers", schema = "beautique_schema")
 public class CustomerEntity extends BaseEntity {
 
     @Column(nullable = false, length = 100)

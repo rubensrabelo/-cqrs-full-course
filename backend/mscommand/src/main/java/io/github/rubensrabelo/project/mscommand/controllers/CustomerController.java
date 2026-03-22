@@ -13,7 +13,7 @@ import io.github.rubensrabelo.project.mscommand.dtos.CustomerDTO;
 import io.github.rubensrabelo.project.mscommand.services.CustomerService;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 public class CustomerController {
 
     private final CustomerService customerService;

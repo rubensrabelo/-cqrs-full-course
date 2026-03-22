@@ -8,9 +8,10 @@ public class ConverterUtil<S, T> {
     private final Class<S> sourceType;
     private final Class<T> targetType;
 
-    
-    public ConverterUtil(Class<S> sourceType, Class<T> targetType) {
-        this.modelMapper = new ModelMapper();
+    public ConverterUtil(ModelMapper modelMapper,
+                         Class<S> sourceType,
+                         Class<T> targetType) {
+        this.modelMapper = modelMapper;
         this.sourceType = sourceType;
         this.targetType = targetType;
     }

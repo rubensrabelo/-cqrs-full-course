@@ -12,7 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "beauty_procedures")
+@Table(name = "beauty_procedures", schema = "beautique_schema")
 public class BeautyProceduresEntity extends BaseEntity {
 
     @Column(nullable = false, length = 100)

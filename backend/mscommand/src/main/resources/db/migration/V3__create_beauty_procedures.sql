@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS beauty_procedures (
+CREATE TABLE IF NOT EXISTS beautique_schema.beauty_procedures (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(500),

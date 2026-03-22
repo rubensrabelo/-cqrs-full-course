@@ -2,6 +2,7 @@ package io.github.rubensrabelo.project.mscommand.services.impl;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import io.github.rubensrabelo.project.mscommand.dtos.CustomerDTO;
@@ -17,11 +18,20 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final BrokerService brokerService;
 
-    private final ConverterUtil<CustomerEntity, CustomerDTO> converterUtil = new ConverterUtil<>(CustomerEntity.class, CustomerDTO.class);
+    private final ConverterUtil<CustomerEntity, CustomerDTO> converterUtil;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, BrokerService brokerService) {
+    public CustomerServiceImpl(
+            ModelMapper modelMapper,
+            CustomerRepository customerRepository,
+            BrokerService brokerService) {
         this.customerRepository = customerRepository;
         this.brokerService = brokerService;
+
+        this.converterUtil = new ConverterUtil<>(
+                modelMapper,
+                CustomerEntity.class,
+                CustomerDTO.class);
+
     }
 
     @Override
@@ -35,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void delete(Long id) {
         Optional<CustomerEntity> optional = customerRepository.findById(id);
-        if(optional.isEmpty()){
+        if (optional.isEmpty()) {
             throw new RuntimeException("Customer not found");
         }
         customerRepository.delete(optional.get());
@@ -44,19 +54,25 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO update(CustomerDTO dto) {
         Optional<CustomerEntity> optional = customerRepository.findById(dto.getId());
-        if(optional.isEmpty()){
+
+        if (optional.isEmpty()) {
             throw new RuntimeException("Customer not found");
         }
-        CustomerEntity customerEntity = converterUtil.convertToSource(dto);
 
-        customerEntity.setAppointments(optional.get().getAppointments());
-        customerEntity.setCreatedAt(optional.get().getCreatedAt());
-        CustomerDTO updatedCustomerDTO = converterUtil.convertToTarget(customerRepository.save(customerEntity));
-        sendCustomerToQueue(customerEntity);
-        return updatedCustomerDTO;
+        CustomerEntity entity = optional.get();
+
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
+
+        entity = customerRepository.save(entity);
+
+        sendCustomerToQueue(entity);
+
+        return converterUtil.convertToTarget(entity);
     }
 
-    private void sendCustomerToQueue(CustomerEntity entity){
+    private void sendCustomerToQueue(CustomerEntity entity) {
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())

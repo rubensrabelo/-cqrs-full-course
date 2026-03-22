@@ -9,6 +9,8 @@ public class BeautyProcedureDTO {
     private String description;
     private BigDecimal price;
 
+    public BeautyProcedureDTO() {}
+
     private BeautyProcedureDTO(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
@@ -20,16 +22,32 @@ public class BeautyProcedureDTO {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public static class Builder {

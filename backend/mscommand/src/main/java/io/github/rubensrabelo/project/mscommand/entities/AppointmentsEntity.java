@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "appointments", schema = "beautique_schema")
 public class AppointmentsEntity extends BaseEntity {
     
     @Column(nullable = false)

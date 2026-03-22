@@ -2,6 +2,7 @@ package io.github.rubensrabelo.project.mscommand.services.impl;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import io.github.rubensrabelo.project.mscommand.dtos.BeautyProcedureDTO;
@@ -17,18 +18,24 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
     private final BeautyProcedureRepository beautyProcedureRepository;
     private final BrokerService brokerService;
 
-    private final ConverterUtil<BeautyProceduresEntity, BeautyProcedureDTO> converterUtil = new ConverterUtil<>(BeautyProceduresEntity.class, BeautyProcedureDTO.class);
-    
+    private final ConverterUtil<BeautyProceduresEntity, BeautyProcedureDTO> converterUtil;
+
     public BeautyProcedureServiceImpl(BeautyProcedureRepository beautyProcedureRepository,
+            ModelMapper modelMapper,
             BrokerService brokerService) {
         this.beautyProcedureRepository = beautyProcedureRepository;
         this.brokerService = brokerService;
+
+        this.converterUtil = new ConverterUtil<>(
+                modelMapper,
+                BeautyProceduresEntity.class,
+                BeautyProcedureDTO.class);
     }
 
     @Override
     public BeautyProcedureDTO create(BeautyProcedureDTO dto) {
         BeautyProceduresEntity entity = converterUtil.convertToSource(dto);
-        entity  = beautyProcedureRepository.save(entity);
+        entity = beautyProcedureRepository.save(entity);
         sendBeautyProceduresToQueue(entity);
         return converterUtil.convertToTarget(entity);
     }
@@ -36,7 +43,7 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
     @Override
     public void delete(Long id) {
         Optional<BeautyProceduresEntity> optional = beautyProcedureRepository.findById(id);
-        if(optional.isEmpty()){
+        if (optional.isEmpty()) {
             throw new RuntimeException("Beauty Procedure not found");
         }
         beautyProcedureRepository.deleteById(id);
@@ -44,29 +51,29 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
 
     @Override
     public BeautyProcedureDTO update(BeautyProcedureDTO dto) {
-        Optional<BeautyProceduresEntity> optional = beautyProcedureRepository.findById(dto.getId());
-        if(optional.isEmpty()){
-            throw new RuntimeException("Beauty Procedure not found");
-        }
-        BeautyProceduresEntity beautyProceduresEntity = converterUtil.convertToSource(dto);
-        beautyProceduresEntity.setAppointments(optional.get().getAppointments());
-        beautyProceduresEntity.setCreatedAt(optional.get().getCreatedAt());
 
-        BeautyProceduresEntity updatedBeautyProcedureEntity = beautyProcedureRepository.save(beautyProceduresEntity);
+        BeautyProceduresEntity entity = beautyProcedureRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Beauty Procedure not found"));
 
-        sendBeautyProceduresToQueue(updatedBeautyProcedureEntity);
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
 
-        return converterUtil.convertToTarget(updatedBeautyProcedureEntity);
+        entity = beautyProcedureRepository.save(entity);
+
+        sendBeautyProceduresToQueue(entity);
+
+        return converterUtil.convertToTarget(entity);
     }
 
-    private void sendBeautyProceduresToQueue(BeautyProceduresEntity entity){
-            BeautyProcedureDTO beautyProcedureDTO = BeautyProcedureDTO.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .description(entity.getDescription())
-                    .price(entity.getPrice())
-                    .build();
-            brokerService.send("beautyProcedures", beautyProcedureDTO);
+    private void sendBeautyProceduresToQueue(BeautyProceduresEntity entity) {
+        BeautyProcedureDTO beautyProcedureDTO = BeautyProcedureDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .price(entity.getPrice())
+                .build();
+        brokerService.send("beautyProcedures", beautyProcedureDTO);
     }
 
 }
