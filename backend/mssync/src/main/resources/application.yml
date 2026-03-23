@@ -1,0 +1,23 @@
+server:
+  servlet:
+    context-path: /ms-sync
+  port: ${APP_PORT:8083}
+
+spring:
+  application:
+    name: ms-sync
+
+  mongodb:
+    uri: ${SPRING_DATA_MONGODB_URI:mongodb://mongo:27017/beautique}
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:user}
+    password: ${SPRING_RABBITMQ_PASSWORD:password}
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","service":"${spring.application.name}","message":"%m"}%n'
