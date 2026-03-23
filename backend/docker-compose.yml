@@ -7,20 +7,27 @@ services:
     env_file:
       - mscommand/.env
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "3334:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - beautique-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beautique"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   mongo:
     image: mongo:7
     container_name: mongo_db
     restart: always
-    env_file:
-      - mssync/.env
     ports:
-      - "${MONGO_PORT}:27017"
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - beautique-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -29,22 +36,30 @@ services:
     env_file:
       - mscommand/.env
     ports:
-      - "${RABBITMQ_PORT}:5672"
-      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - beautique-network
 
   mscommand:
-    build: ./mscommand
+    build:
+      context: ./mscommand
     container_name: mscommand
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
     env_file:
       - mscommand/.env
     ports:
-      - "${APP_PORT}:8082"
+      - "8082:8082"
+    networks:
+      - beautique-network
 
   mssync:
-    build: ./mssync
+    build:
+      context: ./mssync
     container_name: mssync
     depends_on:
       - mongo
@@ -52,8 +67,14 @@ services:
     env_file:
       - mssync/.env
     ports:
-      - "${APP_PORT}:8083"
+      - "8083:8083"
+    networks:
+      - beautique-network
 
 volumes:
   postgres_data:
   mongo_data:
+
+networks:
+  beautique-network:
+    driver: bridge
