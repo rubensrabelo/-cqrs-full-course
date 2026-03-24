@@ -12,7 +12,7 @@ import io.github.rubensrabelo.msquery.dtos.appointments.FullAppointmentDTO;
 import io.github.rubensrabelo.msquery.services.AppointmentService;
 
 @RestController
-@RequestMapping("/appointment")
+@RequestMapping("/appointments")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;

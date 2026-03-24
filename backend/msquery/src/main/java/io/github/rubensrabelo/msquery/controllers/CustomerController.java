@@ -12,7 +12,7 @@ import io.github.rubensrabelo.msquery.dtos.customers.CustomerDTO;
 import io.github.rubensrabelo.msquery.services.CustomerService;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 public class CustomerController {
 
     private final CustomerService customerService;

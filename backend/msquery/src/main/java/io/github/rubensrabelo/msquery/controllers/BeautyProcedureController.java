@@ -12,7 +12,7 @@ import io.github.rubensrabelo.msquery.dtos.beautyprocedures.BeautyProcedureDTO;
 import io.github.rubensrabelo.msquery.services.BeautyProcedureService;
 
 @RestController
-@RequestMapping("/beauty-procedure")
+@RequestMapping("/beauty-procedures")
 public class BeautyProcedureController {
 
     private final BeautyProcedureService beautyProcedureService;
