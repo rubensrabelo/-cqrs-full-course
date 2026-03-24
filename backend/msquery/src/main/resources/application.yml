@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /ms-query
+  port: ${APP_PORT:8084}
+
+spring:
+  application:
+    name: ms-query
+
+  mongodb:
+    uri: ${SPRING_DATA_MONGODB_URI:mongodb://mongo:27017/beautique}
+    database: ${MONGO_DATABASE:beautique}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","service":"${spring.application.name}","message":"%m"}%n'
