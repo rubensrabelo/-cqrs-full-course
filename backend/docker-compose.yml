@@ -89,6 +89,30 @@ services:
       - "8083:8083"
     networks:
       - beautique-network
+  
+  msquery:
+    build:
+      context: ./msquery
+    container_name: msquery
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mscommand:
+        condition: service_healthy
+    env_file:
+      - msquery/.env
+    ports:
+      - "8084:8084"
+    networks:
+      - beautique-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/ms-query/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
 volumes:
   postgres_data:
