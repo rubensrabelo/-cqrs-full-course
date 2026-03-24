@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /ms-query
+    context-path: /ms-beautique
   port: ${APP_PORT:8084}
 
 spring:
