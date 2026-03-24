@@ -27,6 +27,11 @@ services:
       - mongo_data:/data/db
     networks:
       - beautique-network
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -39,6 +44,11 @@ services:
       - "15672:15672"
     networks:
       - beautique-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mscommand:
     build:
@@ -48,22 +58,31 @@ services:
       postgres:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - mscommand/.env
     ports:
       - "8082:8082"
     networks:
       - beautique-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/ms-beautique/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   mssync:
     build:
       context: ./mssync
     container_name: mssync
     depends_on:
-      - mongo
-      - rabbitmq
-      - mscommand
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mscommand:
+        condition: service_healthy
     env_file:
       - mssync/.env
     ports:

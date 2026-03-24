@@ -2,7 +2,7 @@ package io.githuib.rubensrabelo.project.mssync.dtos.customers;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "customers")
+@Document(collection = "customers")
 public class CustomerDTO {
     private Long id;
     private String name;
